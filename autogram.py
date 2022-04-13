@@ -1,11 +1,8 @@
-from itertools import count, chain
 from random import getrandbits
+from itertools import count
+from functools import cache
 from time import sleep
 import gc
-try:
-  from functools import cache
-except:
-  from functools import lru_cache as cache
 
 from psutil import Process, virtual_memory
 from humanize import naturalsize
@@ -19,20 +16,19 @@ def autogram(p: str):
     e, d = divmod(m, 10)
     return b" ".join([word[n], b"hundred"]*(n > 0) + ([[b"ten", b"eleven", b"twelve", b"thir", b"four", b"fif", b"six", b"seven", b"eigh", b"nine"][d] + b"teen" * (d > 2)] if 9 < m < 20 else [[b"twen", b"thir", b"for", b"fif", b"six", b"seven", b"eigh", b"nine"][e - 2] + b"ty"]*(e > 0) + [word[d]]*(d > 0)))
   with tqdm(count(), unit=" attempts") as tq:
-    T, s, proc = {hash(b"")}, b"", Process()
-    pmi, pmp = proc.memory_info, proc.memory_percent
-    join, ch, grb, ns = b"".join, chain, getrandbits, naturalsize # locals avoids global lookup
+    T, s, proc, vm = {hash(b"")}, b"", Process(), virtual_memory
+    pmi, pmp, vmt = proc.memory_info, proc.memory_percent, vm().total
+    join, grb, ns = b"".join, getrandbits, naturalsize # locals avoids global lookup
     pb = bytes(p.replace(" ",""), encoding="utf8").lower() + b'and' # convert to bytes to reduce memory
     for i in tq:
-      if i%50000 == 0:
-        tq.set_description(f"{ns(pmi().rss)} ({pmp():.2f}%) used ")
-        if pmp() > 60: # switch to "less than X% free memory remaining"?
-          print(f"\rUsing {pmp():.2f}% of total memory ({ns(pmi().rss)}), give me a moment...",end="")
-          T.clear()
-          as_word.cache_clear() # would like to retain much of this, but rn we don't
-          gc.collect(); sleep(1); gc.collect(); sleep(1); gc.collect(); sleep(1); gc.collect()
-          print(f"\rUsing {ns(pmi().rss)} ({pmp():.2f}%) with {as_word.cache_info()}.",end=""); sleep(5)
-      t = join(ch([pb],(as_word(sc) + bytes(chr(c), encoding="utf8") + b"s"*(sc != 1) for c,sc in zip(b"abcdefghijklmnopqrstuvwxyz", map(s.count, b"abcdefghijklmnopqrstuvwxyz")))))
+      if i%100000 == 0:
+        av = vm().available / vmt
+        tq.set_description(f"{ns(pmi().rss)} used ({pmp():.2f}% used, {av:.2%} free) ")
+        if av < 0.3 and pmp()>10: # if less than 30% free and using more than 10%, cleanup
+          print(f"\rOnly {av:.2f}% of memory left, clearing cache.", end="")
+          T.clear(); as_word.cache_clear() # would like to retain as much of this as possible, but rn we don't
+          gc.collect(); sleep(1); gc.collect(); sleep(1); gc.collect(); sleep(1); gc.collect(); sleep(1); gc.collect(); sleep(1)
+      t = pb + join(as_word(sc) + bytes(chr(c), encoding="utf8") + b"s"*(sc != 1) for c,sc in zip(b"abcdefghijklmnopqrstuvwxyz", map(s.count, b"abcdefghijklmnopqrstuvwxyz")))
       if s == t:
         return f"""{p} {", ".join(f'''{"and " * (chr(c) == "z")}{as_word(sc).decode()} {chr(c)}{"'s" * (sc != 1)}''' for c,sc in zip(b"abcdefghijklmnopqrstuvwxyz", map(s.count, b"abcdefghijklmnopqrstuvwxyz")))}."""
       if hash(t) in T: # pick random variation, collision is fine as s != t, and this makes T ~8x smaller
@@ -43,7 +39,7 @@ def autogram(p: str):
 if __name__ == "__main__":
   print("Self-enumerating pangram (\"autogram\") generator.")
   print("Based on https://codegolf.stackexchange.com/a/165333 but significantly faster; try pypy!")
-  print(f"Total memory: {naturalsize(virtual_memory().total)} (of which {naturalsize(virtual_memory().available)} is available)")
+  print(f"Total memory: {naturalsize(virtual_memory().total)} (of which {naturalsize(virtual_memory().available)} ({virtual_memory().available / virtual_memory().total:.2%}) is available)")
   print(f"Idle memory use: {naturalsize(Process().memory_info().rss)} ({Process().memory_percent():.2f}%)")
   pg = autogram(input("Figure out the autogram of: "))
   print()
