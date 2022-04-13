@@ -14,18 +14,16 @@ def autogram(p: str):
     pmi, pmp, vmt = proc.memory_info, proc.memory_percent, vm().total
     s = pb = p.replace(" ", "").lower() + "and" # don't repeat adding the "and" for every `t = `
     for i in tq:
-      if i%100000 == 0:
+      if i % 100000 == 0:
         av = vm().available / vmt
         tq.set_description(f"{ns(pmi().rss)} used ({pmp():.2f}% used, {av:.2%} free) ")
-        if av < 0.3 and pmp()>10: # if less than 30% free and using more than 10%, cleanup
-          print(f"\rOnly {av:.2%} of memory left, clearing cache.", end="")
-          T.clear() # would like to retain as much of this as possible, but rn we don't
-          gc.collect()
-      t = pb + join(f"{as_word[sc]}{c}{'s'*(sc != 1)}" for c,sc in zip("abcdefghijklmnopqrstuvwxyz", map(s.count, "abcdefghijklmnopqrstuvwxyz")))
-      if s == t:
+        if av < 0.3 and pmp() > 10: # if less than 30% free and using more than 10%, cleanup
+          T.clear(); gc.collect() # would like to retain as much of this as possible, but we just dump it right now
+      t = pb + join(f"{as_word[sc]}{c}{'s' * (sc != 1)}" for c,sc in zip("abcdefghijklmnopqrstuvwxyz", map(s.count, "abcdefghijklmnopqrstuvwxyz")))
+      if s == t: # a match meant it was stable under recounting it, which means we found our autogram!
         return f"""{p} {", ".join(f'''{"and " * (c == "z")}{as_word[sc]} {c}{"'s" * (sc != 1)}''' for c,sc in zip("abcdefghijklmnopqrstuvwxyz", map(s.count, "abcdefghijklmnopqrstuvwxyz")))}."""
       if hash(t) in T: # pick random variation, collision is fine as s != t, and this makes T ~8x smaller
-        t = join(c * max(1, s.count(c) + (grb(3) - 4)*(grb(1) == 0)) for c in "abcdefghijklmnopqrstuvwxyz")
+        t = join(c * max(1, s.count(c) + (grb(3) - 4) * (grb(1) == 0)) for c in "abcdefghijklmnopqrstuvwxyz")
       T.add(hash(t))
       s = t
 
