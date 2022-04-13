@@ -25,7 +25,7 @@ def autogram(p: str):
         av = vm().available / vmt
         tq.set_description(f"{ns(pmi().rss)} used ({pmp():.2f}% used, {av:.2%} free) ")
         if av < 0.3 and pmp()>10: # if less than 30% free and using more than 10%, cleanup
-          print(f"\rOnly {av:.2f}% of memory left, clearing cache.", end="")
+          print(f"\rOnly {av:.2%} of memory left, clearing cache.", end="")
           T.clear(); as_word.cache_clear() # would like to retain as much of this as possible, but rn we don't
           gc.collect(); sleep(1); gc.collect(); sleep(1); gc.collect(); sleep(1); gc.collect(); sleep(1); gc.collect(); sleep(1)
       t = pb + join(as_word(sc) + bytes(chr(c), encoding="utf8") + b"s"*(sc != 1) for c,sc in zip(b"abcdefghijklmnopqrstuvwxyz", map(s.count, b"abcdefghijklmnopqrstuvwxyz")))
