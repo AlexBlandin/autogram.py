@@ -1,7 +1,6 @@
 from random import getrandbits
 from itertools import count
 from functools import cache
-from time import sleep
 import gc
 
 from psutil import Process, virtual_memory
@@ -16,10 +15,9 @@ def autogram(p: str):
     e, d = divmod(m, 10)
     return b" ".join([word[n], b"hundred"]*(n > 0) + ([[b"ten", b"eleven", b"twelve", b"thir", b"four", b"fif", b"six", b"seven", b"eigh", b"nine"][d] + b"teen" * (d > 2)] if 9 < m < 20 else [[b"twen", b"thir", b"for", b"fif", b"six", b"seven", b"eigh", b"nine"][e - 2] + b"ty"]*(e > 0) + [word[d]]*(d > 0)))
   with tqdm(count(), unit=" attempts") as tq:
-    T, s, proc, vm = {hash(b"")}, b"", Process(), virtual_memory
+    T, proc, vm, join, grb, ns = {0}, Process(), virtual_memory, b"".join, getrandbits, naturalsize
     pmi, pmp, vmt = proc.memory_info, proc.memory_percent, vm().total
-    join, grb, ns = b"".join, getrandbits, naturalsize # locals avoids global lookup
-    pb = bytes(p.replace(" ",""), encoding="utf8").lower() + b'and' # convert to bytes to reduce memory
+    s = pb = bytes(p.replace(" ",""), encoding="utf8").lower() + b'and' # convert to bytes to reduce memory
     for i in tq:
       if i%100000 == 0:
         av = vm().available / vmt
@@ -27,7 +25,7 @@ def autogram(p: str):
         if av < 0.3 and pmp()>10: # if less than 30% free and using more than 10%, cleanup
           print(f"\rOnly {av:.2%} of memory left, clearing cache.", end="")
           T.clear(); as_word.cache_clear() # would like to retain as much of this as possible, but rn we don't
-          gc.collect(); sleep(1); gc.collect(); sleep(1); gc.collect(); sleep(1); gc.collect(); sleep(1); gc.collect(); sleep(1)
+          gc.collect()
       t = pb + join(as_word(sc) + bytes(chr(c), encoding="utf8") + b"s"*(sc != 1) for c,sc in zip(b"abcdefghijklmnopqrstuvwxyz", map(s.count, b"abcdefghijklmnopqrstuvwxyz")))
       if s == t:
         return f"""{p} {", ".join(f'''{"and " * (chr(c) == "z")}{as_word(sc).decode()} {chr(c)}{"'s" * (sc != 1)}''' for c,sc in zip(b"abcdefghijklmnopqrstuvwxyz", map(s.count, b"abcdefghijklmnopqrstuvwxyz")))}."""
