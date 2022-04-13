@@ -26,7 +26,7 @@ def autogram(p: str):
     for i in tq:
       if i%50000 == 0:
         tq.set_description(f"{ns(pmi().rss)} ({pmp():.2f}%) used ")
-        if pmp() > 5: # switch to "less than X% free memory remaining?"
+        if pmp() > 60: # switch to "less than X% free memory remaining"?
           print(f"\rUsing {pmp():.2f}% of total memory ({ns(pmi().rss)}), give me a moment...",end="")
           T.clear()
           as_word.cache_clear() # would like to retain much of this, but rn we don't
