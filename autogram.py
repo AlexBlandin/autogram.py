@@ -34,9 +34,8 @@ def autogram(p: str):
       # occurences of each letter
       oc = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
       for l in prev: oc[ord(l)-97] += 1
-      plural = ES[oc.count(1)]
       
-      candidate = f"{PL}{WD[oc[0]]}{WD[oc[1]]}{WD[oc[2]]}{WD[oc[3]]}{WD[oc[4]]}{WD[oc[5]]}{WD[oc[6]]}{WD[oc[7]]}{WD[oc[8]]}{WD[oc[9]]}{WD[oc[10]]}{WD[oc[11]]}{WD[oc[12]]}{WD[oc[13]]}{WD[oc[14]]}{WD[oc[15]]}{WD[oc[16]]}{WD[oc[17]]}{WD[oc[18]]}{WD[oc[19]]}{WD[oc[20]]}{WD[oc[21]]}{WD[oc[22]]}{WD[oc[23]]}{WD[oc[24]]}{WD[oc[25]]}{plural}"
+      candidate = f"{PL}{WD[oc[0]]}{WD[oc[1]]}{WD[oc[2]]}{WD[oc[3]]}{WD[oc[4]]}{WD[oc[5]]}{WD[oc[6]]}{WD[oc[7]]}{WD[oc[8]]}{WD[oc[9]]}{WD[oc[10]]}{WD[oc[11]]}{WD[oc[12]]}{WD[oc[13]]}{WD[oc[14]]}{WD[oc[15]]}{WD[oc[16]]}{WD[oc[17]]}{WD[oc[18]]}{WD[oc[19]]}{WD[oc[20]]}{WD[oc[21]]}{WD[oc[22]]}{WD[oc[23]]}{WD[oc[24]]}{WD[oc[25]]}{ES[oc.count(1)]}"
       if candidate == prev: # a match meant it was stable under recounting it, which means we've found our autogram!
         return f"""{p} {", ".join(f'''{"and "*(l == "z")}{as_word[c]} {l}{"'s"*(c != 1)}''' for c,l in zip(oc, "abcdefghijklmnopqrstuvwxyz"))}.""" # pretty output
       
