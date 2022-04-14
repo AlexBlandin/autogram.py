@@ -31,19 +31,16 @@ def autogram(p: str):
     for i in tq:
       if i & 2**18-1 == 0: memcheck() # update memory usage printout every so often, do cache cleanup if necessary
       
-      # cs = [s.count(l) for l in "abcdefghijklmnopqrstuvwxyz"]
       cs = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
       for l in s: cs[ord(l)-97] += 1
       esses = ses[cs.count(1)]
-      
-      # t = f"{pl}{join(f'{as_word[c]}' for c in cs)}{esses}"
       t = f"{pl}{wd[cs[0]]}{wd[cs[1]]}{wd[cs[2]]}{wd[cs[3]]}{wd[cs[4]]}{wd[cs[5]]}{wd[cs[6]]}{wd[cs[7]]}{wd[cs[8]]}{wd[cs[9]]}{wd[cs[10]]}{wd[cs[11]]}{wd[cs[12]]}{wd[cs[13]]}{wd[cs[14]]}{wd[cs[15]]}{wd[cs[16]]}{wd[cs[17]]}{wd[cs[18]]}{wd[cs[19]]}{wd[cs[20]]}{wd[cs[21]]}{wd[cs[22]]}{wd[cs[23]]}{wd[cs[24]]}{wd[cs[25]]}{esses}"
       
       if s == t: # a match meant it was stable under recounting it, which means we've found our autogram!
         return f"""{p} {", ".join(f'''{"and "*(l == "z")}{as_word[c]} {l}{"'s"*(c != 1)}''' for c,l in zip(cs, "abcdefghijklmnopqrstuvwxyz"))}.""" # pretty output
       
-      while hash(t) in T: # pick a new random variation, collision is fine as s != t, and this makes T ~8x smaller
-        t = f"{pl}{esses}{join(l*max(0, c + (grb(2) - 2)*(grb(2) == 0)) for c,l in zip(cs, 'abcdefghijklmnopqrstuvwxyz'))}" # this is our main control mechanism! random ± randomly over each count!
+      while hash(t) in T: # pick a new random variation, collision is fine
+        t = join(l*max(0, c + (grb(2) - 2)*(grb(2) == 0)) for c,l in zip(cs, 'abcdefghijklmnopqrstuvwxyz')) # this is our main control mechanism! random ± randomly over each count!
       
       T.add(hash(t))
       s = t
