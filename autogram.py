@@ -3,7 +3,7 @@ from itertools import count # tell tqdm to keep going
 import gc
 
 from psutil import Process, virtual_memory
-from humanize import naturalsize
+from humanize import naturalsize as size
 from tqdm import tqdm
 
 def autogram(p: str) -> str:
@@ -20,7 +20,7 @@ def autogram(p: str) -> str:
     
     def memcheck(): # we like a printout of memory usage, since our cache grows over time (a feature, not a leak!)
       pmp, av = Process().memory_percent(), virtual_memory().available / virtual_memory().total
-      tq.set_description(f"{naturalsize(Process().memory_info().rss)} used ({pmp:.2f}% used, {av:.2%} free) ")
+      tq.set_description(f"{size(Process().memory_info().rss)} used ({pmp:.2f}% used, {av:.2%} free) ")
       if av < 0.3 and pmp > 10: # if less than 30% memory is free and we're using more than 10% of all memory, cleanup
         HIST.clear() # would like to retain some of this if possible, but we just dump it all for now
         gc.collect()
@@ -52,10 +52,9 @@ def autogram(p: str) -> str:
 
 if __name__ == "__main__":
   print(autogram.__doc__)
-  print(
-    f"Total memory: {naturalsize(virtual_memory().total)} (of which {naturalsize(virtual_memory().available)} ({virtual_memory().available / virtual_memory().total:.2%}) is available)"
-  )
-  print(f"Idle memory use: {naturalsize(Process().memory_info().rss)} ({Process().memory_percent():.2f}%)")
+  VM = virtual_memory()
+  print(f"Total memory: {size(VM.total)} (of which {size(VM.available)} ({VM.available / VM.total:.2%}) is available)")
+  print(f"Idle memory use: {size(Process().memory_info().rss)} ({Process().memory_percent():.2f}%)")
   
   pangram = autogram(input("Figure out the autogram of: "))
   
