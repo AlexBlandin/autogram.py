@@ -11,7 +11,7 @@ def autogram(p: str) -> str:
   """
   Self-enumerating pangram ("autogram") generator.
   
-  Based on https://codegolf.stackexchange.com/a/165333 but significantly faster and in British English; try PyPy!
+  Based on https://codegolf.stackexchange.com/a/165333 but faster (try PyPy!) and in British English!
   """
   with open("thousand.txt", "r") as f:
     AS_WORD = list(map(str.strip, f.readlines()))
