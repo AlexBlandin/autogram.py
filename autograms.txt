@@ -8,3 +8,5 @@ This sentence contains three a's, one b, three c's, two d's, thirty-five e's, si
 
 This pangram contains five a's, one b, two c's, two d's, twenty-eight e's, four f's, four g's, eight h's, eleven i's, one j, one k, two l's, two m's, sixteen n's, thirteen o's, two p's, one q, seven r's, thirty s's, twenty-four t's, two u's, six v's, ten w's, four x's, four y's, and one z.
 
+Auto-enumerating pangrams are seven a's, one b, one c, two d's, thirty-two e's, seven f's, four g's, five h's, eleven i's, one j, one k, two l's, three m's, twenty-two n's, fifteen o's, two p's, one q, nine r's, twenty-six s's, nineteen t's, five u's, six v's, eight w's, three x's, four y's, and one z.
+
