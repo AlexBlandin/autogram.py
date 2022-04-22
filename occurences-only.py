@@ -26,27 +26,38 @@ def autogram(p: str) -> str:
         HIST.clear() # would like to retain some of this if possible, but we just dump it all for now
         gc.collect()
     
-    WORD = [join(filter(str.isalpha, w)) + "s" * (w != "one") for w in AS_WORD] # simplified version of AS_WORD, w/ 's
-    old = PRELUDE = f"{join(filter(str.isalpha, p)).lower()}abcdefghijklmnopqrstuvwxyandz" # don't repeat adding the "and" and alphabet for every `t = `
-    counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    for l in old:
-      counts[ord(l) - 97] += 1
+    def occurences(s):
+      "occurences of each letter, 0..25=a..z"
+      occ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      for l in s:
+        occ[ord(l) - 97] += 1
+      return occ
+    
+    WORD = [occurences(filter(str.isalpha, x)) for x in AS_WORD] # simplified version of AS_WORD
+    WORD[0][ord("s")-97] += 1 # add in the extra 's for plurals
+    for w in WORD[2:]: w[ord("s")-97] += 1 # add in the extra 's for plurals
+    
+    old = new = PRELUDE = occurences(f"{join(filter(str.isalpha, p)).lower()}abcdefghijklmnopqrstuvwxyandz") # don't repeat adding the "and" and alphabet for every `t = `
     
     for i in tq:
       if i & 2**18 - 1 == 0: memcheck() # update memory usage printout every so often, do cache cleanup if necessary
       
-      new = PRELUDE + join(map(WORD.__getitem__, counts))
+      new = PRELUDE
+      for o in old:
+        for i in range(26):
+          new[i] += WORD[o][i]
       if new == old: # a match meant it has closure when recounting, which means we've found our autogram!
-        return f"""{p} {", ".join(f'''{"and "*(l == "z")}{AS_WORD[c]} {l}{"'s"*(c != 1)}''' for c,l in zip(counts, "abcdefghijklmnopqrstuvwxyz"))}.""" # pretty output
+        return f"""{p} {", ".join(f'''{"and "*(l == "z")}{AS_WORD[c]} {l}{"'s"*(c != 1)}''' for c,l in zip(new, "abcdefghijklmnopqrstuvwxyz"))}.""" # pretty output
       old = new
-      hn = hash(new)
+      hn = hash(tuple(new))
       if hn in HIST: # pick a new random variation, collisions are fine, as we're just trying to escape cycles...
-        counts = [max(0, c + randbits(1) - randbits(1)) for c in counts] # 50% of ±1 for each letter!
+        new = [max(0, c + randbits(1) - randbits(1)) for c in new] # 50% of ±1 for each letter!
       else: # count the occurences again
         HIST.add(hn)
-        counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        for l in new:
-          counts[ord(l) - 97] += 1
+        new = PRELUDE
+        for o in old:
+          for i in range(26):
+            new[i] = WORD[o][i]
 
 if __name__ == "__main__":
   print(autogram.__doc__)
