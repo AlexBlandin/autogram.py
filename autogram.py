@@ -53,9 +53,9 @@ def autogram(p: str) -> str:
 
 if __name__ == "__main__":
   print(autogram.__doc__)
-  VM = virtual_memory()
+  VM, PROC = virtual_memory(), Process()
   print(f"Total memory: {size(VM.total)} (of which {size(VM.available)} ({VM.available / VM.total:.2%}) is available)")
-  print(f"Idle memory use: {size(Process().memory_info().rss)} ({Process().memory_percent():.2f}%)")
+  print(f"Idle memory use: {size(PROC.memory_info().rss)} ({PROC.memory_percent():.2f}%)")
   
   pangram = autogram(input("Figure out the autogram of: "))
   
