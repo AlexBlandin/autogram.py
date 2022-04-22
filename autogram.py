@@ -41,14 +41,14 @@ def autogram(p: str) -> str:
       new = f"{PRELUDE}{join(map(WORD.__getitem__, counts))}{PLURAL[counts.count(1)]}"
       if new == old: # a match meant it has closure when recounting, which means we've found our autogram!
         return f"""{p} {", ".join(f'''{"and "*(l == "z")}{AS_WORD[c]} {l}{"'s"*(c != 1)}''' for c,l in zip(counts, "abcdefghijklmnopqrstuvwxyz"))}.""" # pretty output
-      
-      if hash(new) in HIST: # pick a new random variation, collisions are fine, as we're just trying to escape cycles...
-        counts = [max(0, c + randbits(1) - randbits(1)) for c in counts] # 50% to ±1 for each letter!
+      hn = hash(new)
+      if hn in HIST: # pick a new random variation, collisions are fine, as we're just trying to escape cycles...
+        counts = [max(0, c + randbits(1) - randbits(1)) for c in counts] # 50% of ±1 for each letter!
       else: # count the occurences again
         counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         for l in new:
           counts[ord(l) - 97] += 1
-      HIST.add(hash(new))
+      HIST.add(hn)
       old = new
 
 if __name__ == "__main__":
