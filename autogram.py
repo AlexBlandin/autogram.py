@@ -26,11 +26,8 @@ def autogram(p: str) -> str:
         HIST.clear() # would like to retain some of this if possible, but we just dump it all for now
         gc.collect()
     
-    WORD = [join(filter(str.isalpha, x)) for x in AS_WORD] # simplified version of AS_WORD
-    PLURAL = ["s" * (26 - x) for x in range(26 + 1)] # how many extra s do we add for the 's 's?
+    WORD = [join(filter(str.isalpha, w))+"s"*(w!="one") for w in AS_WORD] # simplified version of AS_WORD, includes an s for plurals (word != "one")
     old = PRELUDE = f"{join(filter(str.isalpha, p)).lower()}abcdefghijklmnopqrstuvwxyandz" # don't repeat adding the "and" and alphabet for every `t = `
-    
-    # occurences of each letter
     counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     for l in old:
       counts[ord(l) - 97] += 1
@@ -38,18 +35,18 @@ def autogram(p: str) -> str:
     for i in tq:
       if i & 2**18 - 1 == 0: memcheck() # update memory usage printout every so often, do cache cleanup if necessary
       
-      new = f"{PRELUDE}{join(map(WORD.__getitem__, counts))}{PLURAL[counts.count(1)]}"
+      new = PRELUDE+join(map(WORD.__getitem__, counts))
       if new == old: # a match meant it has closure when recounting, which means we've found our autogram!
         return f"""{p} {", ".join(f'''{"and "*(l == "z")}{AS_WORD[c]} {l}{"'s"*(c != 1)}''' for c,l in zip(counts, "abcdefghijklmnopqrstuvwxyz"))}.""" # pretty output
+      old = new
       hn = hash(new)
       if hn in HIST: # pick a new random variation, collisions are fine, as we're just trying to escape cycles...
         counts = [max(0, c + randbits(1) - randbits(1)) for c in counts] # 50% of ±1 for each letter!
       else: # count the occurences again
+        HIST.add(hn)
         counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         for l in new:
           counts[ord(l) - 97] += 1
-      HIST.add(hn)
-      old = new
 
 if __name__ == "__main__":
   print(autogram.__doc__)
