@@ -13,4 +13,3 @@ This sentence contains three a's, one b, three c's, two d's, thirty-five e's, si
 This sentence contains three a's, one b, three c's, two d's, thirty-five e's, six f's, two g's, seven h's, eleven i's, one j, one k, two l's, one m, twenty-two n's, fifteen o's, one p, one q, five r's, twenty-six s's, twenty-one t's, one u, seven v's, eight w's, three x's, five y's, and one z.
 
 The quick brown fox jumps over the lazy dog contains four a's, two b's, three c's, three d's, thirty e's, eight f's, four g's, ten h's, ten i's, two j's, two k's, three l's, two m's, fifteen n's, seventeen o's, two p's, two q's, ten r's, thirty-one s's, twenty-eight t's, five u's, seven v's, eleven w's, two x's, five y's, and two z's.
-

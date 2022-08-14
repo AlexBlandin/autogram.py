@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-from random import getrandbits # the fastest way to get a small random number
 from itertools import count # tell tqdm to keep going
+from random import getrandbits # the fastest way to get a small random number
 import gc
 
-from psutil import Process, virtual_memory
 from humanize import naturalsize as size
+from psutil import virtual_memory, Process
 from tqdm import tqdm
 
 def autogram(p: str) -> str:
@@ -34,10 +34,13 @@ def autogram(p: str) -> str:
       return occ
     
     WORD = [occurences(filter(str.isalpha, x)) for x in AS_WORD] # simplified version of AS_WORD
-    WORD[0][ord("s")-97] += 1 # add in the extra 's for plurals
-    for w in WORD[2:]: w[ord("s")-97] += 1 # add in the extra 's for plurals
+    WORD[0][ord("s") - 97] += 1 # add in the extra 's for plurals
+    for w in WORD[2:]:
+      w[ord("s") - 97] += 1 # add in the extra 's for plurals
     
-    old = new = PRELUDE = occurences(f"{join(filter(str.isalpha, p)).lower()}abcdefghijklmnopqrstuvwxyandz") # don't repeat adding the "and" and alphabet for every `t = `
+    old = new = PRELUDE = occurences(
+      f"{join(filter(str.isalpha, p)).lower()}abcdefghijklmnopqrstuvwxyandz"
+    ) # don't repeat adding the "and" and alphabet for every `t = `
     
     for i in tq:
       if i & 2**18 - 1 == 0: memcheck() # update memory usage printout every so often, do cache cleanup if necessary

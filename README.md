@@ -9,4 +9,3 @@ Self-enumerating pangram ("autogram") generator!
 
 - [`poetry install`](https://python-poetry.org/)
 - Spare time - some inputs will take a long time, some may never resolve
-

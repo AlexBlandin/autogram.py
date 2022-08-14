@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-from random import getrandbits # the fastest way to get a small random number
 from itertools import count # tell tqdm to keep going
+from random import getrandbits # the fastest way to get a small random number
 import gc
 
-from psutil import Process, virtual_memory
 from humanize import naturalsize as size
+from psutil import virtual_memory, Process
 from tqdm import tqdm
 
 def autogram(p: str) -> str:
