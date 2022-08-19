@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-from itertools import count # tell tqdm to keep going
-from random import getrandbits # the fastest way to get a small random number
+from itertools import count
+from pathlib import Path
+from random import getrandbits
 import gc
 
 from humanize import naturalsize as size
@@ -13,8 +14,7 @@ def autogram(p: str) -> str:
   
   Based on https://codegolf.stackexchange.com/a/165333 but faster (try PyPy!) and in British English!
   """
-  with open("thousand.txt", "r") as f:
-    AS_WORD = list(map(str.strip, f.readlines()))
+  AS_WORD = list(Path("thousand.txt").read_text().splitlines())
   with tqdm(count(), unit = " attempts") as tq:
     HIST = set() # type: set[int] # the almighty cache of hashes we keep around for collisions, our history of hopefuls
     randbits, join = getrandbits, "".join
