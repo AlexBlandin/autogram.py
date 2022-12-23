@@ -47,6 +47,7 @@ def autogram(p: str) -> str:
         counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         for l in new:
           counts[ord(l) - 97] += 1
+  return "" # NOTE unreachable
 
 if __name__ == "__main__":
   print(autogram.__doc__)
