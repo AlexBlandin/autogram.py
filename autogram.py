@@ -33,7 +33,8 @@ def autogram(p: str) -> str:
       counts[ord(a) - 97] += 1
     
     for i in tq:
-      if i & 2**18 - 1 == 0: memcheck() # update memory usage printout every so often, do cache cleanup if necessary
+      if i & 2**18 - 1 == 0:
+        memcheck() # update memory usage printout every so often, do cache cleanup if necessary
       
       new = PRELUDE + join(map(WORD.__getitem__, counts))
       if new == old: # a match meant it has closure when recounting, which means we've found our autogram!

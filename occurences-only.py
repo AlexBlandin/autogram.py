@@ -7,7 +7,7 @@ from humanize import naturalsize as size
 from psutil import virtual_memory, Process
 from tqdm import tqdm
 
-def autogram(p: str) -> str:
+def autogram(p: str) -> str | None:
   """
   Self-enumerating pangram ("autogram") generator.
   
@@ -29,8 +29,8 @@ def autogram(p: str) -> str:
     def occurences(s):
       "occurences of each letter, 0..25=a..z"
       occ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-      for l in s:
-        occ[ord(l) - 97] += 1
+      for a in s:
+        occ[ord(a) - 97] += 1
       return occ
     
     WORD = [occurences(filter(str.isalpha, x)) for x in AS_WORD] # simplified version of AS_WORD
@@ -43,14 +43,15 @@ def autogram(p: str) -> str:
     ) # don't repeat adding the "and" and alphabet for every `t = `
     
     for i in tq:
-      if i & 2**18 - 1 == 0: memcheck() # update memory usage printout every so often, do cache cleanup if necessary
+      if i & 2**18 - 1 == 0:
+        memcheck() # update memory usage printout every so often, do cache cleanup if necessary
       
       new = PRELUDE
-      for o in old:
+      for a in old:
         for i in range(26):
-          new[i] += WORD[o][i]
+          new[i] += WORD[a][i]
       if new == old: # a match meant it has closure when recounting, which means we've found our autogram!
-        return f"""{p} {", ".join(f'''{"and "*(l == "z")}{AS_WORD[c]} {l}{"'s"*(c != 1)}''' for c,l in zip(new, "abcdefghijklmnopqrstuvwxyz"))}.""" # pretty output
+        return f"{p} {", ".join(f"{"and "*(a == "z")}{AS_WORD[c]} {a}{"'s"*(c != 1)}" for c,a in zip(new, "abcdefghijklmnopqrstuvwxyz"))}." # pretty output
       old = new
       hn = hash(tuple(new))
       if hn in HIST: # pick a new random variation, collisions are fine, as we're just trying to escape cycles...
@@ -58,9 +59,9 @@ def autogram(p: str) -> str:
       else: # count the occurences again
         HIST.add(hn)
         new = PRELUDE
-        for o in old:
+        for a in old:
           for i in range(26):
-            new[i] = WORD[o][i]
+            new[i] = WORD[a][i]
 
 if __name__ == "__main__":
   print(autogram.__doc__)
