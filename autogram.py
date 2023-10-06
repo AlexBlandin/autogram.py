@@ -29,15 +29,15 @@ def autogram(p: str) -> str:
     WORD = [join(filter(str.isalpha, w)) + "s" * (w != "one") for w in AS_WORD] # simplified version of AS_WORD, w/ 's
     old = PRELUDE = f"{join(filter(str.isalpha, p)).lower()}abcdefghijklmnopqrstuvwxyandz" # don't repeat adding the "and" and alphabet for every `t = `
     counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    for l in old:
-      counts[ord(l) - 97] += 1
+    for a in old:
+      counts[ord(a) - 97] += 1
     
     for i in tq:
       if i & 2**18 - 1 == 0: memcheck() # update memory usage printout every so often, do cache cleanup if necessary
       
       new = PRELUDE + join(map(WORD.__getitem__, counts))
       if new == old: # a match meant it has closure when recounting, which means we've found our autogram!
-        return f"""{p} {", ".join(f'''{"and "*(l == "z")}{AS_WORD[c]} {l}{"'s"*(c != 1)}''' for c,l in zip(counts, "abcdefghijklmnopqrstuvwxyz"))}.""" # pretty output
+        return f"{p} {", ".join(f"{"and "*(a == "z")}{AS_WORD[c]} {a}{"'s"*(c != 1)}" for c,a in zip(counts, "abcdefghijklmnopqrstuvwxyz"))}."
       old = new
       hn = hash(new)
       if hn in HIST: # pick a new random variation, collisions are fine, as we're just trying to escape cycles...
@@ -45,8 +45,8 @@ def autogram(p: str) -> str:
       else: # count the occurences again
         HIST.add(hn)
         counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        for l in new:
-          counts[ord(l) - 97] += 1
+        for a in new:
+          counts[ord(a) - 97] += 1
   return "" # NOTE unreachable
 
 if __name__ == "__main__":
