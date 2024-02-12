@@ -11,8 +11,7 @@ from tqdm import tqdm
 
 
 def autogram(p: str) -> str:
-  """
-  Self-enumerating pangram ("autogram") generator.
+  """Self-enumerating pangram ("autogram") generator.
 
   Based on https://codegolf.stackexchange.com/a/165333 but faster (try PyPy!) and in British English!
   """

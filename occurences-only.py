@@ -10,8 +10,7 @@ from tqdm import tqdm
 
 
 def autogram(p: str) -> str | None:
-  """
-  Self-enumerating pangram ("autogram") generator.
+  """Self-enumerating pangram ("autogram") generator.
 
   Based on https://codegolf.stackexchange.com/a/165333 but faster (try PyPy!) and in British English!
   """
@@ -29,7 +28,7 @@ def autogram(p: str) -> str | None:
         gc.collect()
 
     def occurences(s):
-      "occurences of each letter, 0..25=a..z"
+      """Occurences of each letter, 0..25=a..z."""
       occ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       for a in s:
         occ[ord(a) - 97] += 1
@@ -41,7 +40,7 @@ def autogram(p: str) -> str | None:
       w[ord("s") - 97] += 1  # add in the extra 's for plurals
 
     old = new = prelude = occurences(
-      f"{join(filter(str.isalpha, p)).lower()}abcdefghijklmnopqrstuvwxyandz"
+      f"{join(filter(str.isalpha, p)).lower()}abcdefghijklmnopqrstuvwxyandz",
     )  # don't repeat adding the "and" and alphabet for every `t = `
 
     for i in tq:
@@ -64,6 +63,7 @@ def autogram(p: str) -> str | None:
         for a in old:
           for j in range(26):
             new[i] = word[a][j]
+    return None
 
 
 if __name__ == "__main__":
