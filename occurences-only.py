@@ -1,33 +1,51 @@
 #!/usr/bin/env python3
+"""
+Self-enumerating pangram ("autogram") generator.
+
+Based on https://codegolf.stackexchange.com/a/165333 but faster (try PyPy!) and in British English!
+
+Copyright 2020 Alex Blandin
+"""
+
+from __future__ import annotations
 
 import gc
-from itertools import count  # tell tqdm to keep going
+from itertools import count
+from pathlib import Path  # tell tqdm to keep going
 from random import getrandbits  # the fastest way to get a small random number
+from typing import TYPE_CHECKING
 
 from humanize import naturalsize as size
 from psutil import Process, virtual_memory
 from tqdm import tqdm
 
+if TYPE_CHECKING:
+  from collections.abc import Iterable
 
-def autogram(p: str) -> str | None:
+
+def autogram(p: str) -> str | None:  # noqa: C901
   """Self-enumerating pangram ("autogram") generator.
 
   Based on https://codegolf.stackexchange.com/a/165333 but faster (try PyPy!) and in British English!
   """
-  with open("thousand.txt", encoding="utf8") as f:
+  with Path("thousand.txt").open(encoding="utf8") as f:
     as_word = list(map(str.strip, f.readlines()))
   with tqdm(count(), unit=" attempts") as tq:
     hist = set()  # type: set[int] # the almighty cache of hashes we keep around for collisions, our history of hopefuls
     randbits, join = getrandbits, "".join
 
-    def memcheck():  # we like a printout of memory usage, since our cache grows over time (a feature, not a leak!)
+    def memcheck() -> (
+      None
+    ):  # we like a printout of memory usage, since our cache grows over time (a feature, not a leak!)
       pmp, av = Process().memory_percent(), virtual_memory().available / virtual_memory().total
       tq.set_description(f"{size(Process().memory_info().rss)} used ({pmp:.2f}% used, {av:.2%} free) ")
-      if av < 0.3 and pmp > 10:  # if less than 30% memory is free and we're using more than 10% of all memory, cleanup
+      if (
+        av < 0.3 and pmp > 10  # noqa: PLR2004
+      ):  # if less than 30% memory is free and we're using more than 10% of all memory, cleanup
         hist.clear()  # would like to retain some of this if possible, but we just dump it all for now
         gc.collect()
 
-    def occurences(s):
+    def occurences(s: Iterable[str]) -> list[int]:
       """Occurences of each letter, 0..25=a..z."""
       occ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       for a in s:
@@ -52,7 +70,7 @@ def autogram(p: str) -> str | None:
         for j in range(26):
           new[i] += word[a][j]
       if new == old:  # a match meant it has closure when recounting, which means we've found our autogram!
-        return f"{p} {", ".join(f"{"and " * (a == "z")}{as_word[c]} {a}{"'s" * (c != 1)}" for c, a in zip(new, "abcdefghijklmnopqrstuvwxyz", strict=False))}."
+        return f"{p} {", ".join(f"{"and " * (a == "z")}{as_word[c]} {a}{"'s" * (c != 1)}" for c, a in zip(new, "abcdefghijklmnopqrstuvwxyz", strict=False))}."  # noqa: E501
       old = new
       hn = hash(tuple(new))
       if hn in hist:  # pick a new random variation, collisions are fine, as we're just trying to escape cycles...
@@ -75,7 +93,7 @@ if __name__ == "__main__":
   pangram = autogram(input("Figure out the autogram of: "))
   if pangram:
     print()
-    with open("./autograms.txt", "a", encoding="utf8", newline="\n") as o:
+    with Path("autograms.txt").open("a", encoding="utf8", newline="\n") as o:
       o.write(pangram)
       o.write("\n\n")
     print(pangram)
