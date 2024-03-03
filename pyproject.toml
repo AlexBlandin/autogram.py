@@ -3,6 +3,7 @@ name = "autogram.py"
 version = "1.0.0"
 description = "Self-enumerating pangram (\"autogram\") generator!"
 authors = ["AlexBlandin"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.8"
