@@ -6,6 +6,6 @@ Self-enumerating pangram ("autogram") generator!
 [Run this on replit!](https://replit.com/@alexblandin/autogram)
 
 ## Requirements
-
-- [`poetry install`](https://python-poetry.org/)
+- [`pip install -r requirements.txt`](https://www.python.org/)
+  - [regenerate with `uv pip compile pyproject.toml -o requirements.txt`](https://github.com/astral-sh/uv)
 - Spare time - some inputs will take a long time, some may never resolve
