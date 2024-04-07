@@ -40,9 +40,9 @@ def autogram(p: str) -> str:
         gc.collect()
 
     word = [join(filter(str.isalpha, w)) + "s" * (w != "one") for w in as_word]  # simplified version of AS_WORD, w/ 's
-    old = (
-      prelude
-    ) = f"{join(filter(str.isalpha, p)).lower()}abcdefghijklmnopqrstuvwxyandz"  # don't repeat adding the "and" and alphabet for every `t = `  # noqa: E501
+    old = prelude = (
+      f"{join(filter(str.isalpha, p)).lower()}abcdefghijklmnopqrstuvwxyandz"  # don't repeat adding the "and" and alphabet for every `t = `  # noqa: E501
+    )
     counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     for a in old:
       counts[ord(a) - 97] += 1
