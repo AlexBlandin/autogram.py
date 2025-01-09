@@ -70,7 +70,7 @@ def autogram(p: str) -> str | None:  # noqa: C901
         for j in range(26):
           new[i] += word[a][j]
       if new == old:  # a match meant it has closure when recounting, which means we've found our autogram!
-        return f"{p} {", ".join(f"{"and " * (a == "z")}{as_word[c]} {a}{"'s" * (c != 1)}" for c, a in zip(new, "abcdefghijklmnopqrstuvwxyz", strict=False))}."  # noqa: E501
+        return f"{p} {', '.join(f'{"and " * (a == "z")}{as_word[c]} {a}{"'s" * (c != 1)}' for c, a in zip(new, 'abcdefghijklmnopqrstuvwxyz', strict=False))}."  # noqa: E501
       old = new
       hn = hash(tuple(new))
       if hn in hist:  # pick a new random variation, collisions are fine, as we're just trying to escape cycles...
@@ -85,15 +85,15 @@ def autogram(p: str) -> str | None:  # noqa: C901
 
 
 if __name__ == "__main__":
-  print(autogram.__doc__)
+  print(autogram.__doc__)  # noqa: T201
   VM, PROC = virtual_memory(), Process()
-  print(f"Total memory: {size(VM.total)} (of which {size(VM.available)} ({VM.available / VM.total:.2%}) is available)")
-  print(f"Idle memory use: {size(PROC.memory_info().rss)} ({PROC.memory_percent():.2f}%)")
+  print(f"Total memory: {size(VM.total)} (of which {size(VM.available)} ({VM.available / VM.total:.2%}) is available)")  # noqa: T201
+  print(f"Idle memory use: {size(PROC.memory_info().rss)} ({PROC.memory_percent():.2f}%)")  # noqa: T201
 
   pangram = autogram(input("Figure out the autogram of: "))
   if pangram:
-    print()
+    print()  # noqa: T201
     with Path("autograms.txt").open("a", encoding="utf8", newline="\n") as o:
       o.write(pangram)
       o.write("\n\n")
-    print(pangram)
+    print(pangram)  # noqa: T201

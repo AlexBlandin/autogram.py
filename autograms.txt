@@ -12,3 +12,7 @@ This sentence contains three a's, one b, three c's, two d's, thirty-five e's, si
 
 The quick brown fox jumps over the lazy dog contains four a's, two b's, three c's, three d's, thirty e's, eight f's, four g's, ten h's, ten i's, two j's, two k's, three l's, two m's, fifteen n's, seventeen o's, two p's, two q's, ten r's, thirty-one s's, twenty-eight t's, five u's, seven v's, eleven w's, two x's, five y's, and two z's.
 
+RiaTheMoth is cute, proved by this sentence having four a's, two b's, three c's, three d's, thirty-six e's, eight f's, four g's, thirteen h's, fifteen i's, one j, one k, two l's, two m's, sixteen n's, fourteen o's, two p's, one q, twelve r's, thirty s's, twenty-seven t's, five u's, eight v's, seven w's, three x's, five y's, and one z.
+
+If RiaTheMoth is cute this sentence has four a's, one b, three c's, two d's, thirty-three e's, nine f's, one g, nine h's, fifteen i's, one j, one k, one l, two m's, twenty-four n's, sixteen o's, one p, one q, nine r's, twenty-six s's, twenty-one t's, five u's, three v's, six w's, four x's, five y's, and one z.
+
